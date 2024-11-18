@@ -97,10 +97,91 @@ You: bye
 Jarvis: Goodbye! Feel free to chat again anytime!
 ```
 
-* ## Customizing Jarvis
+## Integrating External APIs: Weather Feature (Beware this part is a little more technical)
+
+* In this project, We can extend this simple chatbot's functionality further by integrating an external APIs. This Weather API feature integration enables the chatbot to provide real-time weather updates for any location upon request.
+
+* Choose a Weather API:
+  * Sign up for a free or paid weather API like OpenWeatherMap or WeatherAPI.
+  * Obtain your API key after creating an account.
+
+* Replace the weather API Code with your own code in the WeatherAPI class in Jarvis.py file:
+```shell
+class WeatherAPI:
+    def __init__(self, weather_api_key):
+        self.weather_api_key = weather_api_key
+
+    def get_weather(self, query_param):
+        api_host = "open-weather13.p.rapidapi.com"
+        base_url = f"https://open-weather13.p.rapidapi.com/city/{query_param}/EN"
+        
+        headers = {
+            "X-RapidAPI-Key": self.weather_api_key,
+            "X-RapidAPI-Host": api_host
+        }
+
+        try:
+            # Making the request to the API
+            response = requests.get(base_url, headers=headers)
+
+            # Check if the request was successful (HTTP status code 200)
+            if response.status_code != 200:
+                return f"Error: Unable to fetch data. Status code: {response.status_code}"
+
+            data = response.json()
+
+            # Check if the response contains error information
+            if 'error' in data:
+                return f"Error: {data['error']['message']}"
+
+            # Extracting relevant weather data
+            location = data.get('location', {}).get('name', 'Unknown')
+            country = data.get('location', {}).get('country', 'Unknown')
+            condition_text = data.get('current', {}).get('condition', {}).get('text', 'No data')
+            temperature_c = data.get('current', {}).get('temp_c', 'No data')
+            humidity = data.get('current', {}).get('humidity', 'No data')
+
+            # Return the weather summary
+            return f"The weather in {location}, {country} is {condition_text}. " \
+                   f"The temperature is {temperature_c}°C, and the humidity is {humidity}%. "
+
+        except requests.RequestException as e:
+            return f"Error fetching weather information: {e}"  
+```
+
+* now we can update Chat method to add this feature
+```shell
+elif weather_api_key!="your_weather_api_goes_here" and "weather" in user_response:
+      print("Sure! Let me fetch the weather details for you.")
+      city = user_response.split("in")[-1].strip()
+      # Ensure the city name is not empty
+      if city:
+          weather_info = weather_api.get_weather(city)
+          print(f"Jarvis: {weather_info}")
+      else:
+          print("Jarvis: I couldn't understand the city name. Could you please provide it after 'in'?")
+```
+
+### Adding Similar Features
+The process for integrating additional external APIs or features is similar:
+
+* Identify the Feature: Decide on the functionality you'd like to add (e.g., stock prices, news updates, currency conversion).
+
+* Choose an API: Find a reliable API for the desired feature, and sign up to get an API key.
+
+* Implement the Functionality:
+
+* Write a function/class in Jarvis.py to fetch and process data from the API.
+* Handle errors gracefully in case of invalid inputs or connectivity issues.
+* Integrate Into the Chatbot:
+  * Update the chatbot's logic to recognize user queries related to the new feature.
+  * Call the respective API function and format the response appropriately.
+  * Test Thoroughly: Ensure the integration works as expected for various inputs.
+
+## Customizing Jarvis
 Want to make Jarvis even cooler? Check out the Additional Responses section in the code to add your own custom replies to specific inputs.
 
-* ## Contributing: 
+## Contributing: 
 Feedback and contributions are always welcome! 🎉
 
 If you’d like to:
@@ -112,10 +193,10 @@ Feel free to open an issue or submit a pull request. Let’s make Jarvis the bes
 
 Enjoy your chatbot interactions!
 
-* ## Show Your Support
+## Show Your Support
 If you love Jarvis, give this project a ⭐ on GitHub!
 
-* ## Ready to Chat?
+## Ready to Chat?
 Let’s get started! Fire up Jarvis and see what he has to say.
 Happy chatting! 🚀
 
