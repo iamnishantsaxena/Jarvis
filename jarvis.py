@@ -293,32 +293,32 @@ class Chatbot:
         self.sent_tokens = nltk.sent_tokenize(self.raw)
         self.word_tokens = nltk.word_tokenize(self.raw)
         self.lemmer = WordNetLemmatizer()
+        self.sent_tokens.pop(-1)
+
         self.greeting_inputs = ("hello", "hi", "greetings", "sup", "what's up", "hey",)
         self.greeting_responses = ["hi", "hey", "*nods*", "hi there", "hello", "I'm glad you're talking to me!"]
-
-        # Predefined responses
         self.additional_responses = ADDITIONAL_RESPONSES
-        
+    
+    def preprocess_input(self, text):
+      remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
+      return text.lower().translate(remove_punct_dict)
+    
     def LemTokens(self, tokens):
         return [self.lemmer.lemmatize(token) for token in tokens]
 
     def LemNormalize(self, text):
-        remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
-        return self.LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
+        return self.LemTokens(nltk.word_tokenize( self.preprocess_input(text) ))
 
     def greeting(self, sentence):
         for word in sentence.split():
             if word.lower() in self.greeting_inputs:
                 return random.choice(self.greeting_responses)
         return None
-    
-    def preprocess_input(self, text):
-      remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
-      return text.lower().translate(remove_punct_dict)
 
     def generate_response(self, user_response):
         robo_response = ''
         self.sent_tokens.append(user_response)
+
         TfidfVec = TfidfVectorizer(tokenizer=self.LemNormalize, stop_words='english')
         tfidf = TfidfVec.fit_transform(self.sent_tokens)
         vals = cosine_similarity(tfidf[-1], tfidf)
@@ -330,10 +330,9 @@ class Chatbot:
         if req_tfidf == 0:
             robo_response = "I am sorry, I don't understand you."
         else:
-            robo_response = self.sent_tokens[idx]
+            r_response = self.sent_tokens[idx]
+            robo_response = r_response.split("jarvis:")[-1].strip()
         
-        
-
         # Check for predefined additional responses
         if user_response in self.additional_responses:
             responses = self.additional_responses[user_response]
@@ -371,7 +370,9 @@ class Chatbot:
                     print(f"Jarvis: {greeting_response}")
                 else:
                     response = self.generate_response(user_response)
-                    print(f"Jarvis: {response}")
+                    if response:
+                      print(f"Jarvis: {response}")
+                    
                     
 class WeatherAPI:
     def __init__(self, weather_api_key):
