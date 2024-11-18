@@ -4,13 +4,7 @@ Welcome to Jarvis – your friendly neighborhood chatbot project!
 
 Jarvis is designed to make technology more accessible, engaging, and even a little fun. Whether you’re here to ask questions, learn something new, or simply have a laugh, Jarvis is ready to chat with you.
 
-The motivation behind Jarvis is simple: I wanted to create a simple and conversational AI that’s not only smart but also approachable. This project combines cutting-edge AI with a touch of humor and personality to deliver an interactive experience you’ll love.
-
-So, whether you’re a tech enthusiast, a curious learner, or just passing by, I hope Jarvis will make your day a little brighter.
-
-## Features
-
-It is a Python-based chatbot capable of responding to user queries using TF-IDF for natural language processing and cosine similarity for response matching. It also includes a predefined set of responses for common questions.
+This project combines cutting-edge AI with a touch of humor and personality to deliver an interactive experience you’ll love. It is a Python-based chatbot capable of responding to user queries using TF-IDF for natural language processing and cosine similarity for response matching. It also includes a predefined set of responses for common questions.
 
 Features
 * Modular Design: Encapsulated in a Chatbot class for better organization and scalability.
