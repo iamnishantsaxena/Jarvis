@@ -5,7 +5,7 @@ User: tell me a joke
 jarvis: Why don't scientists trust atoms? Because they make up everything!
 
 User: who created you
-jarvis: I was created by a team of developers, Mostly Henry.
+jarvis: Just one amazing person – Nishant! A one-man army built me from scratch.
 
 User: bye
 jarvis: Goodbye! Feel free to come back if you have more questions.
